@@ -1,76 +1,87 @@
 package dev.momo.chaser.utils;
 
 import dev.momo.chaser.DotChaser;
+import dev.momo.chaser.FrameDisplay;
 import dev.momo.chaser.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class InstallThread extends Thread {
 
     public boolean done = false;
-    public String percent = "";
+    public String percent = "0%";
+    public int downloaded = 0;
+    public int quota = 0;
+    private FrameDisplay src;
+    private boolean started = false;
+
+    public InstallThread(FrameDisplay src) {
+        this.src = src;
+    }
+
+    @Override
+    public synchronized void start() {
+        super.start();
+        started = true;
+    }
+
+    public boolean isStarted() {
+        return started;
+    }
 
     @Override
     public void run() {
-        File xFile = new File("C:\\DotChaser\\x.txt");
-        boolean installed = xFile.exists();
+        HashMap<String, Integer> files = new HashMap<>();
+        files.put("cancel_button.png", 4350);
+        files.put("cancel_button_hover.png", 4384);
+        files.put("createserver_button.png", 5653);
+        files.put("createserver_button_hover.png", 5782);
+        files.put("joinserver_button.png", 5759);
+        files.put("joinserver_button_hover.png", 5882);
+        files.put("start_button.png", 4168);
+        files.put("start_button_hover.png", 4195);
+        files.put("ping_0.png", 4136);
+        files.put("ping_1.png", 3150);
+        files.put("ping_2.png", 3089);
+        files.put("ping_3.png", 3097);
+        files.put("ping_4.png", 2994);
+        files.put("title.png", 4889);
 
-        if (!installed) {
-            xFile.getParentFile().mkdirs();
-
-            File resFolder = new File("C:\\DotChaser\\res");
+        File resFolder = new File("C:\\DotChaser\\res");
+        if (!resFolder.exists())
             resFolder.mkdirs();
 
-            String[] files = new String[] {
-                    "cancel_button.png",
-                    "cancel_button_hover.png",
-                    "createserver_button.png",
-                    "createserver_button_hover.png",
-                    "joinserver_button.png",
-                    "joinserver_button_hover.png",
-                    "start_button.png",
-                    "start_button_hover.png",
-                    "ping_0.png",
-                    "ping_1.png",
-                    "ping_2.png",
-                    "ping_3.png",
-                    "ping_4.png",
-                    "title.png"
-            };
+        List<String> toDownload = new ArrayList<>();
 
-            int quota = 62000;
-            int downloaded = 0;
+        for (String s : files.keySet()) {
+            File destination = new File("C:\\DotChaser\\res\\" + s);
+            if (!destination.exists())
+                toDownload.add(s);
 
-            for (String s : files) {
-                String url = "http://teambreadzone.altervista.org/dotchaser/" + s;
-                File destination = new File("C:\\DotChaser\\res\\" + s);
-
-                DownloadThread downloadThread = new DownloadThread(url, destination);
-                downloadThread.start();
-
-                while (!downloadThread.done) {
-                    System.out.print("");
-                }
-
-
-                downloaded += destination.length();
-
-                percent = (int) (((double) downloaded / (double) quota) * 100) + "%";
-            }
-
-            try {
-                xFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        } else {
-            DotChaser.getInstance().setStage(Stage.MAIN_MENU);
+            quota += files.get(s);
         }
 
+        for (String s : toDownload) {
+            String url = "http://teambreadzone.altervista.org/dotchaser/" + s;
+            File destination = new File("C:\\DotChaser\\res\\" + s);
+
+            DownloadThread downloadThread = new DownloadThread(url, destination);
+            downloadThread.start();
+
+            while (!downloadThread.done) {
+                System.out.print("");
+            }
+            downloaded += destination.length();
+            percent = (int) (((double) downloaded / (double) quota) * 100) + "%";
+
+            src.updateProgressInstallation("Downloading missing assets (" + percent + ")");
+        }
 
         done = true;
     }
+
 }

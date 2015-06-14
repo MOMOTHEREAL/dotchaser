@@ -13,7 +13,9 @@ public class FrameDisplay extends JPanel {
     JLabel versionLabel = new JLabel("v1.0");
     JLabel pingLabel = new JLabel("0 ms");
     JLabel installingLabel = new JLabel("Verifying installation");
+    static Graphics2D g2d;
 
+    final InstallThread installThread = new InstallThread(this);
 
     public FrameDisplay() throws HeadlessException {
         this.setSize(640, 400);
@@ -21,7 +23,7 @@ public class FrameDisplay extends JPanel {
         this.setLayout(null);
 
         versionLabel.setLocation(12, (int) getSize().getHeight() - 60);
-        versionLabel.setSize(300, 30);
+        versionLabel.setSize(300, 100);
         add(versionLabel);
 
         pingLabel.setLocation((int) getSize().getWidth() - 82, 30);
@@ -39,7 +41,9 @@ public class FrameDisplay extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g;
+
+        if (g2d == null)
+            g2d = (Graphics2D) g;
 
         if (DotChaser.getInstance().getStage() == Stage.INSTALL) {
             draw_INSTALL(g2d);
@@ -51,25 +55,25 @@ public class FrameDisplay extends JPanel {
 
     }
 
+    public void updateProgressInstallation(String value) {
+        installingLabel.setText(value);
+        installingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    }
+
     public void draw_INSTALL(Graphics2D g2d) {
+        updateProgressInstallation("<html>Downloading missing assets (" + installThread.percent + ")");
 
         versionLabel.setVisible(false);
         pingLabel.setVisible(false);
         installingLabel.setVisible(true);
 
-        InstallThread installThread = new InstallThread();
-        installThread.start();
+        if (!installThread.isStarted())
+            installThread.start();
 
-        System.out.println("Drawing...");
-
-        while (!installThread.done) {
-            DotChaser.frame.setTitle(installThread.percent);
+        if (installThread.done) {
+            System.out.println(installThread.downloaded);
+            DotChaser.getInstance().setStage(Stage.MAIN_MENU);
         }
-
-        DotChaser.frame.setTitle(".chaser");
-
-        DotChaser.getInstance().setStage(Stage.MAIN_MENU);
-
     }
 
     public void draw_MAIN_MENU(Graphics2D g2d) {
