@@ -26,7 +26,7 @@ public class FrameDisplay extends JPanel {
         this.setLayout(null);
 
         versionLabel.setLocation(12, (int) getSize().getHeight() - 60);
-        versionLabel.setSize(300, 100);
+        versionLabel.setSize(100, 30);
         add(versionLabel);
 
         pingLabel.setLocation((int) getSize().getWidth() - 82, 30);
@@ -114,12 +114,12 @@ public class FrameDisplay extends JPanel {
                     if (mouse != null) {
                         if (startButtonMask.contains(mouse.x, mouse.y)) {
                             DotChaser.getInstance().setStage(Stage.SERVER_ACTION);
-                            try {
-                                String res = ServerCreator.createServer("testing", "pl");
-                                System.out.println(res);
-                            } catch (InvalidServerNameException e1) {
-                                System.out.println(e1.getMessage());
-                            }
+                            //try {
+                            //    String res = ServerCreator.createServer("testing", "pl");
+                            //    System.out.println(res);
+                            //} catch (InvalidServerNameException e1) {
+                            //    System.out.println(e1.getMessage());
+                            //}
                         }
                     }
                 }
