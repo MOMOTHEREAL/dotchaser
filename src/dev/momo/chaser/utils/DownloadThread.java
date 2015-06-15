@@ -9,11 +9,19 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
+/**
+ * Used when downloading a file from the server into a folder
+ */
 public class DownloadThread extends Thread {
     private String url;
     private File destination;
     public boolean done = false;
 
+    /**
+     * Creates a new DownloadThread instance
+     * @param url The address of the file to download
+     * @param destination The destination file (after download)
+     */
     public DownloadThread(String url, File destination) {
         this.url = url;
         this.destination = destination;

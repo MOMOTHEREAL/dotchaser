@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Used for checking and fixing the installation of assets
+ */
 public class InstallThread extends Thread {
 
     public boolean done = false;
@@ -15,6 +18,10 @@ public class InstallThread extends Thread {
     private FrameDisplay src;
     private boolean started = false;
 
+    /**
+     * Creates the instance of the Install thread
+     * @param src The FrameDisplay source to update
+     */
     public InstallThread(FrameDisplay src) {
         this.src = src;
     }
@@ -31,7 +38,7 @@ public class InstallThread extends Thread {
 
     @Override
     public void run() {
-        HashMap<String, Integer> files = new HashMap<>();
+        HashMap<String, Integer> files = new HashMap<>(); // The files to download, with their exact file size in bytes
         files.put("cancel_button.png", 4350);
         files.put("cancel_button_hover.png", 4384);
         files.put("createserver_button.png", 5653);

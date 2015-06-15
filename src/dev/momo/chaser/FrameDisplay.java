@@ -11,15 +11,21 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * The main rendering utility class (the JPanel)
+ */
 public class FrameDisplay extends JPanel {
     JLabel versionLabel = new JLabel("v1.0");
     JLabel pingLabel = new JLabel("0 ms");
     JLabel installingLabel = new JLabel("Verifying installation");
-    static boolean click_MAIN_MENU = false;
-    static boolean click_SERVER_ACTION = false;
+    static boolean click_MAIN_MENU = false; // The initialization state of the Main Menu mouse listener
+    static boolean click_SERVER_ACTION = false; // The initialization state of the Server Action mouse listener
 
     final InstallThread installThread = new InstallThread(this);
 
+    /**
+     * Sets up the JPanel and its content
+     */
     public FrameDisplay() throws HeadlessException {
         this.setSize(640, 400);
         this.setVisible(true);

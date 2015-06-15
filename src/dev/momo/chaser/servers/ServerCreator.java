@@ -12,6 +12,13 @@ import java.net.ProtocolException;
 import java.net.URL;
 
 public class ServerCreator {
+    /**
+     *
+     * @param serverName The server identifier
+     * @param player The player hosting the server
+     * @return The host's response after creation
+     * @throws InvalidServerNameException if the host returns an invalidName response
+     */
     public static String createServer(String serverName, String player) throws InvalidServerNameException {
         try {
             String url = "http://teambreadzone.altervista.org/dotchaser/servers/createServer.php";

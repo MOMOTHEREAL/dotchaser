@@ -3,11 +3,16 @@ package dev.momo.chaser;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The startup class
+ */
 public class Start {
     private static FrameDisplay frame = new FrameDisplay();
     private static JFrame f;
 
-
+    /**
+     * Starts the graphical display task
+     */
     public Start() {
 
         new DotChaser();
@@ -23,6 +28,9 @@ public class Start {
         }
     }
 
+    /**
+     * Main startup method, setting up the window
+     */
     public static void main(String[] args) {
         f = new JFrame(".chaser");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

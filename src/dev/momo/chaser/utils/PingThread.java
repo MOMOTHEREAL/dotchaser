@@ -7,6 +7,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * Pings the host to test the connection
+ */
 public class PingThread extends Thread {
 
     @Override
