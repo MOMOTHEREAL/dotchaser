@@ -15,7 +15,8 @@ public class FrameDisplay extends JPanel {
     JLabel versionLabel = new JLabel("v1.0");
     JLabel pingLabel = new JLabel("0 ms");
     JLabel installingLabel = new JLabel("Verifying installation");
-    static Graphics2D g2d;
+    static boolean click_MAIN_MENU = false;
+    static boolean click_SERVER_ACTION = false;
 
     final InstallThread installThread = new InstallThread(this);
 
@@ -100,12 +101,14 @@ public class FrameDisplay extends JPanel {
 
             // g2d.drawImage(title, ((int)getSize().getWidth() - title.getWidth(null))/2  + 2, 10, null);
             g2d.drawImage(startButton, ((int)getSize().getWidth() - startButton.getWidth(null))/2 + 2 , 150, null);
-            g2d.drawImage(ping, (int)getSize().getWidth() - 50, 0, 50, 40, null);
+            g2d.drawImage(ping, (int) getSize().getWidth() - 50, 0, 50, 40, null);
 
-            addMouseListener(new MouseAdapter() {
+            if (!click_MAIN_MENU)
+                addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     super.mouseClicked(e);
+                    click_MAIN_MENU = true;
 
                     Point mouse = getMousePosition();
                     if (mouse != null) {
@@ -163,18 +166,21 @@ public class FrameDisplay extends JPanel {
             g2d.drawImage(joinServer, ((int)getSize().getWidth() - joinServer.getWidth(null))/2 + 2 , 150, null);
             g2d.drawImage(cancel, ((int)getSize().getWidth() - cancel.getWidth(null))/2 + 2 , 250, null);
 
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    super.mouseClicked(e);
+            if (!click_SERVER_ACTION)
+                addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        super.mouseClicked(e);
 
-                    Point mouse = getMousePosition();
-                    if (mouse != null) {
-                        if (cancelMask.contains(mouse.x, mouse.y))
-                            DotChaser.getInstance().setStage(Stage.MAIN_MENU);
+                        click_SERVER_ACTION = true;
+
+                        Point mouse = getMousePosition();
+                        if (mouse != null) {
+                            if (cancelMask.contains(mouse.x, mouse.y))
+                                DotChaser.getInstance().setStage(Stage.MAIN_MENU);
+                        }
                     }
-                }
-            });
+                });
         } catch (IOException e) {
             e.printStackTrace();
         }
