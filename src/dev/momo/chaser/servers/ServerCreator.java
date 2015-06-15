@@ -2,7 +2,6 @@ package dev.momo.chaser.servers;
 
 import dev.momo.chaser.servers.exception.InvalidServerNameException;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;

@@ -1,11 +1,7 @@
 package dev.momo.chaser.utils;
-
-import dev.momo.chaser.DotChaser;
 import dev.momo.chaser.FrameDisplay;
-import dev.momo.chaser.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,6 @@
 package dev.momo.chaser;
+import dev.momo.chaser.servers.ServerCreator;
+import dev.momo.chaser.servers.exception.InvalidServerNameException;
 import dev.momo.chaser.utils.InstallThread;
 
 import javax.imageio.ImageIO;
@@ -42,8 +44,7 @@ public class FrameDisplay extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (g2d == null)
-            g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D)g;
 
         if (DotChaser.getInstance().getStage() == Stage.INSTALL) {
             draw_INSTALL(g2d);
@@ -97,7 +98,7 @@ public class FrameDisplay extends JPanel {
                     startButton = ImageIO.read(new File("C:\\DotChaser\\res\\start_button_hover.png"));
             }
 
-           // g2d.drawImage(title, ((int)getSize().getWidth() - title.getWidth(null))/2  + 2, 10, null);
+            // g2d.drawImage(title, ((int)getSize().getWidth() - title.getWidth(null))/2  + 2, 10, null);
             g2d.drawImage(startButton, ((int)getSize().getWidth() - startButton.getWidth(null))/2 + 2 , 150, null);
             g2d.drawImage(ping, (int)getSize().getWidth() - 50, 0, 50, 40, null);
 
@@ -108,8 +109,15 @@ public class FrameDisplay extends JPanel {
 
                     Point mouse = getMousePosition();
                     if (mouse != null) {
-                        if (startButtonMask.contains(mouse.x, mouse.y))
+                        if (startButtonMask.contains(mouse.x, mouse.y)) {
                             DotChaser.getInstance().setStage(Stage.SERVER_ACTION);
+                            try {
+                                String res = ServerCreator.createServer("testing", "pl");
+                                System.out.println(res);
+                            } catch (InvalidServerNameException e1) {
+                                System.out.println(e1.getMessage());
+                            }
+                        }
                     }
                 }
             });
