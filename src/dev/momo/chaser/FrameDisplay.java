@@ -1,6 +1,4 @@
 package dev.momo.chaser;
-import dev.momo.chaser.servers.ServerCreator;
-import dev.momo.chaser.servers.exception.InvalidServerNameException;
 import dev.momo.chaser.utils.InstallThread;
 
 import javax.imageio.ImageIO;
@@ -15,7 +13,7 @@ import java.io.IOException;
  * The main rendering utility class (the JPanel)
  */
 public class FrameDisplay extends JPanel {
-    JLabel versionLabel = new JLabel("v1.0");
+    JLabel descriptionLabel = new JLabel("v1.0");
     JLabel pingLabel = new JLabel("0 ms");
     JLabel installingLabel = new JLabel("Verifying installation");
     static boolean click_MAIN_MENU = false; // The initialization state of the Main Menu mouse listener
@@ -31,9 +29,9 @@ public class FrameDisplay extends JPanel {
         this.setVisible(true);
         this.setLayout(null);
 
-        versionLabel.setLocation(12, (int) getSize().getHeight() - 60);
-        versionLabel.setSize(100, 30);
-        add(versionLabel);
+        descriptionLabel.setLocation(12, (int) getSize().getHeight() - 60);
+        descriptionLabel.setSize(600, 30);
+        add(descriptionLabel);
 
         pingLabel.setLocation((int) getSize().getWidth() - 82, 30);
         pingLabel.setSize(100, 30);
@@ -71,7 +69,7 @@ public class FrameDisplay extends JPanel {
     public void draw_INSTALL(Graphics2D g2d) {
         updateProgressInstallation("<html>Downloading missing assets (" + installThread.percent + ")");
 
-        versionLabel.setVisible(false);
+        descriptionLabel.setVisible(false);
         pingLabel.setVisible(false);
         installingLabel.setVisible(true);
 
@@ -87,10 +85,14 @@ public class FrameDisplay extends JPanel {
     public void draw_MAIN_MENU(Graphics2D g2d) {
         Point mouse = getMousePosition();
 
-        versionLabel.setVisible(true);
+        descriptionLabel.setVisible(true);
+        descriptionLabel.setText("v1.0");
         pingLabel.setVisible(true);
         installingLabel.setVisible(false);
         pingLabel.setText(DotChaser.getInstance().getPing() + " ms");
+
+        if (DotChaser.getInstance().getPing() >= 2000l)
+            pingLabel.setText("Error");
 
         try {
             // Image title = ImageIO.read(new File("C:\\DotChaser\\res\\title.png"));
@@ -137,9 +139,10 @@ public class FrameDisplay extends JPanel {
 
     public void draw_SERVER_ACTION(Graphics2D g2d) {
         Point mouse = getMousePosition();
-        versionLabel.setVisible(false);
+        descriptionLabel.setVisible(true);
         pingLabel.setVisible(false);
         installingLabel.setVisible(false);
+        descriptionLabel.setText("");
 
         try {
             Image createServer = ImageIO.read(new File("C:\\DotChaser\\res\\createserver_button.png"));
@@ -154,18 +157,24 @@ public class FrameDisplay extends JPanel {
             cancelMask.setBounds(((int) getSize().getWidth() - cancel.getWidth(null)) / 2 + 2, 250, 400, 75);
 
             if (mouse != null) {
-                if (createServerMask.contains(mouse.x, mouse.y))
+                if (createServerMask.contains(mouse.x, mouse.y)) {
                     createServer = ImageIO.read(new File("C:\\DotChaser\\res\\createserver_button_hover.png"));
-            }
+                    descriptionLabel.setText("Create a new server to get your friends connected");
+                }
 
-            if (mouse != null) {
-                if (joinServerMask.contains(mouse.x, mouse.y))
+                else if (joinServerMask.contains(mouse.x, mouse.y)) {
                     joinServer = ImageIO.read(new File("C:\\DotChaser\\res\\joinserver_button_hover.png"));
-            }
+                    descriptionLabel.setText("Connect to servers around the world");
+                }
 
-            if (mouse != null) {
-                if (cancelMask.contains(mouse.x, mouse.y))
+                else if (cancelMask.contains(mouse.x, mouse.y)) {
                     cancel = ImageIO.read(new File("C:\\DotChaser\\res\\cancel_button_hover.png"));
+                    descriptionLabel.setText("Return to main menu");
+                } else {
+                    descriptionLabel.setText("");
+                }
+            } else {
+                descriptionLabel.setText("");
             }
 
             g2d.drawImage(createServer, ((int)getSize().getWidth() - createServer.getWidth(null))/2 + 2 , 50, null);
